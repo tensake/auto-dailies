@@ -15,7 +15,7 @@ from selenium.common.exceptions import (
     ElementClickInterceptedException,
     ElementNotInteractableException,
     InvalidElementStateException,
-    NoSuchElementException, 
+    NoSuchElementException,
     WebDriverException,
     TimeoutException,
 )
@@ -28,7 +28,7 @@ from src.config import CONFIG
 
 def wait_for(c, wait: WebDriverWait, sel: SelEnum) -> WebElement | None:
     """
-    Wait for a selector to satisfy the given condition 
+    Wait for a selector to satisfy the given condition
     and then return the WebElement.
     """
     try:
@@ -39,7 +39,7 @@ def wait_for(c, wait: WebDriverWait, sel: SelEnum) -> WebElement | None:
         prerror(f"Driver error while waiting for {sel}: {e}")
     except AttributeError as e:
         prerror(f"Invalid selector {sel}: {e}")
-    
+
     return None
 
 @overload
@@ -50,7 +50,7 @@ def find(driver: WebDriver | WebElement, sel: SelEnum | tuple[str, str], *, mult
 ) -> WebElement | None | list[WebElement]:
     """
     Find an element and return it.
-    Also supports finding multiple elements. 
+    Also supports finding multiple elements.
     """
     try:
         if multiple:
@@ -59,10 +59,10 @@ def find(driver: WebDriver | WebElement, sel: SelEnum | tuple[str, str], *, mult
 
     except (NoSuchElementException, StaleElementReferenceException):
         prdebug(f"Element not found: {sel}")
-        
+
     except WebDriverException as e:
         prerror(f"Driver error while finding element {sel}: {e}")
-    
+
     return [] if multiple else None
 
 def switch_newtab(driver) -> str:
@@ -84,23 +84,25 @@ def close_all_tabs(driver):
 
 def handle_exceptions(default=None, retry: bool = False):
     """
-    A decorator that catches and logs any exceptions 
+    A decorator that catches and logs any exceptions
     if has exceptions returns a default value.
     """
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            for att in range(2 if retry else 1):
+            last_result = None
+            for _ in range(2 if retry else 1):
                 try:
                     res = func(*args, **kwargs)
                     prdebug(f"{func.__name__} result: {res}")
 
                     if getattr(res, "success", True):
                         return res
+                    last_result = res
                 except Exception as e:
                     tb = traceback.format_exc()
                     prdebug(f"Exception in {func.__name__}: {e}\n{tb}")
-            return default
+            return last_result if last_result is not None else default
         return wrapper
     return decorator
 
@@ -190,7 +192,7 @@ def get_swal(driver) -> Swal:
         title = find(swal, SwalSelectors.TITLE)
         text = find(swal, SwalSelectors.TEXT)
         icon = find(swal, SwalSelectors.ICON)
-        
+
         confirm_button = wait_for(Condition.CLICKABLE, wait, SwalSelectors.CONFIRM_BUTTON)
 
         # Some alerts have content and footer instead of title, text and icon
@@ -209,5 +211,5 @@ def get_swal(driver) -> Swal:
         )
         prdebug(data)
         return data
-    
+
     return Swal()
