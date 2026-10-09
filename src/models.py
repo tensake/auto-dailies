@@ -26,7 +26,7 @@ class Swal:
     text: str | None = None
     icon: str | None = None
     confirm_button: WebElement | None = None
-    
+
     def click_confirm(self) -> bool:
         if self.confirm_button:
             self.confirm_button.click()
@@ -115,7 +115,7 @@ class RunResult(Result):
     @property
     def all_coins(self) -> int:
         return self.p.balance.coins + self.p.inventory_meta.all_coins
-    
+
     @property
     def all_gold(self) -> int:
         return self.p.balance.gold + self.p.inventory_meta.all_gold

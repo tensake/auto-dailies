@@ -24,7 +24,7 @@ def run_giveaway(driver) -> GiveawayResult:
         links.append(
             parse_attr(find(giveaway, GiveawaySelectors.LINK), "href")
         )
-    
+
     # Check past giveaways
     box = wait_for(Condition.VISIBLE, wait, GiveawaySelectors.PAST_GIVEAWAY_BOX)
     past_links = []
@@ -43,7 +43,7 @@ def run_giveaway(driver) -> GiveawayResult:
         if join_giveaway(driver, link):
             joined.append(link)
             random_sleep(5)
-    
+
     # Check if won any past giveaway
     won_giveaways = []
     for link in past_links:
@@ -105,7 +105,7 @@ def check_won_giveaway(driver, href) -> dict[str, str | None] | None:
     if not claim_price_button:
         return None
     prsuccess(f"Won giveaway! {href}")
-    
+
     # Get price info
     click_el(driver, claim_price_button)
     swal = get_swal(driver)

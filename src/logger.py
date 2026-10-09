@@ -81,7 +81,7 @@ class Db:
     def insert_run_result(self, result: RunResult) -> bool:
         if not CONFIG.db_enabled or self.conn is None:
             return False
-        
+
         profile = result.p if result.p.id else result.ip
         account_id = profile.id
         username = profile.username
@@ -185,7 +185,7 @@ class Notifications:
                 )
             else:
                 data["text"] = accounts
-            
+
             data["parse_mode"] = "MarkdownV2"
 
             r = requests.post(
@@ -217,7 +217,7 @@ class Notifications:
                 f"Reached target for gold: {', '.join([i.p.username for i in results if i.has_reached_target_gold])}"
             )
             d += "\n"
-        
+
         if any(i for i in results if i.giveaway and i.giveaway.won):
             d += (
                 f"Won giveaways: {'\n'.join([f'{i.p.username} won {w['item_text']}, promocode: {w['promocode']}' for i in results if i.giveaway for w in i.giveaway.won])}\n"
@@ -333,5 +333,5 @@ class Notifications:
                 f"*{self._md(field['name'])}*\n"
                 f"{self._md(field['value'])}"
             )
-        
+
         return text

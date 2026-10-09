@@ -83,7 +83,7 @@ class Config:
         parser.add_argument("--chromium_path", type=str, help="Path to the browser binary.")
         parser.add_argument("--chromedriver_path", type=str, help="Path to the Chromedriver.")
         parser.add_argument("--config_path", type=str, help="Path to the config file.")
-        
+
         # For new pkl files
         parser.add_argument("--new_account", type=str, help="Phone number (with country code, only numbers) \
             of the new telegram account to be added.")
@@ -104,7 +104,7 @@ class Config:
         # Check if account directory exists
         if not os.path.exists(self.accounts_dir):
             raise FileNotFoundError(f"Specified account directory not found: {os.path.abspath(self.accounts_dir)}")
-        
+
         # Get accounts pkl file paths
         acs =  {
             name: f"{self.accounts_dir}/{name}"
@@ -120,11 +120,11 @@ class Config:
                 raise FileExistsError(f"Account already exists: {self.new_account}.pkl")
 
         return acs
-    
+
     def validate(self):
         self._validate_paths()
         self._validate_values()
-    
+
     def _validate_paths(self):
         # Check if paths exist
         for path in [self.chromium_path, self.chromedriver_path]:

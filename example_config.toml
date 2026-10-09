@@ -17,7 +17,7 @@ sell_inventory = false
 wait_timeout = 2
 # Amount of time to wait before closing the browser
 wait_after = 0
-# Price threshold for joining giveaways, if threshold is 1, 
+# Price threshold for joining giveaways, if threshold is 1,
 # it will join all giveaways with price 1 or less.
 giveaway_price_threshold = 0
 # Price threshold for opening cases, same logic as in giveaways

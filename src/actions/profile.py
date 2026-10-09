@@ -36,7 +36,7 @@ def sell_item(driver, i: InventoryItem, sell_button: WebElement | None) -> bool:
                             can_sell = True
                 case CurrencyType.COIN:
                     can_sell = True
-    
+
     # Sell item
     if can_sell:
         click_el(driver, sell_button)

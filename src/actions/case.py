@@ -49,7 +49,7 @@ def open_case(driver, case: Case) -> bool:
 
     wait_for(Condition.PRESENCE, wait, CaseSelectors.CARD_LIST)
     random_sleep(3) # card animation
-    
+
     # Extract case price
     price = None
     reqs_el = find(driver, CaseSelectors.REQUIREMENTS)

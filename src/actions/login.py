@@ -17,8 +17,8 @@ def get_secretcode(driver) -> str | None:
     random_sleep(2)
     return parse_text(
         wait_for(
-            Condition.PRESENCE, 
-            WebDriverWait(driver, CONFIG.wait_timeout), 
+            Condition.PRESENCE,
+            WebDriverWait(driver, CONFIG.wait_timeout),
             LoginSelectors.SECRET_CODE
         )
     )
@@ -37,14 +37,14 @@ def oauth_loop(driver, tab) -> bool:
                 random_sleep(0.3, 0.1)
                 phone_input.send_keys(Keys.BACKSPACE)
             phone_input.send_keys(str(CONFIG.new_account), Keys.ENTER)
-        
+
         # Check for accept button
         if tab_exists(driver, tab):
             if click_el(driver, wait_for(
                 Condition.CLICKABLE, wait, LoginSelectors.ACCEPT_BUTTON
             )):
                 break
-    
+
     return True
 
 @handle_exceptions(default=False)
@@ -53,15 +53,15 @@ def run_login_tg(driver) -> bool:
     wait = WebDriverWait(driver, CONFIG.wait_timeout)
     driver.get(CONFIG.referral_url or BASE_URL)
     origin_tab = driver.current_window_handle
-    
+
     # Open Telegram login page if not open already. Don't retry because
     # theres a possiblity of this form appearing automatically.
     click_el(
-        driver, 
+        driver,
         wait_for(
-            Condition.CLICKABLE, 
-            wait, 
-            LoginSelectors.LOGIN_BUTTON), 
+            Condition.CLICKABLE,
+            wait,
+            LoginSelectors.LOGIN_BUTTON),
         retries=0
     )
 
@@ -87,12 +87,12 @@ def run_login_tg(driver) -> bool:
                     Condition.CLICKABLE, wait, CommonSelectors.BUTTON
                 ))
                 driver.close()
-                
+
                 # Switch back to main window and refresh
                 driver.switch_to.window(origin_tab)
                 driver.refresh()
-                
+
                 prsuccess(f"Login successful, secret code: {get_secretcode(driver)}")
                 return True
-    
+
     return False

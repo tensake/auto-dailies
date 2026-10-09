@@ -40,7 +40,7 @@ IGNORE_ITEMS = [
     "сувенир",
     "фигурк",
     "чиби",
-    
+
     # Paid items
     "кристалл",
     "благослов",
@@ -93,13 +93,13 @@ class CommonSelectors(SelEnum):
     LINK = (By.TAG_NAME, 'a')
     IFRAME = (By.TAG_NAME, 'iframe')
     BUTTON = (By.TAG_NAME, 'button')
-    
+
 class LoginSelectors(SelEnum):
     """Selectors for telegram login actions. """
     SECRET_CODE = (By.CLASS_NAME, 'my-secret-code-value_val')
     LOGIN_BUTTON = (By.CSS_SELECTOR, "a.header-signin")
     TG_LOGIN_BUTTON = (By.CSS_SELECTOR, 'a.login-button.login-button_telegram')
-    
+
     TG_PHONE_INPUT = (By.CSS_SELECTOR, 'input#login-phone.form-control')
     SUBMIT_BUTTON = (By.CSS_SELECTOR, 'button[type="submit"]')
     ACCEPT_BUTTON = (By.XPATH, "//button[@onclick='return confirmRequest()']")
@@ -134,10 +134,10 @@ class CaseSelectors(SelEnum):
     IMAGE = (By.CLASS_NAME, 'index-case_cover')
     NAME = (By.CLASS_NAME, 'index-case_name')
     PRICE = (By.CLASS_NAME, 'index-case_price')
-    
+
     REQUIREMENTS = (By.CLASS_NAME, 'give-requirements-list')
     REQUIREMENT = (By.CLASS_NAME, 'give-requirements-list_item__text')
-    
+
     CARD_LIST = (By.CLASS_NAME, 'box-page-loot-cards')
     CARD = (By.CLASS_NAME, 'box-page-loot-cards-card')
 
@@ -150,7 +150,7 @@ class ProfileSelectors(SelEnum):
     """Profile page selectors. """
     PANEL_BOX = (By.CLASS_NAME, 'profile-account-panel')
     USERNAME = (By.CLASS_NAME, 'profile-username')
-        
+
     DATA_BOX = (By.CLASS_NAME, 'profile-user-data')
     ID = (By.XPATH, '//span[contains(text(), "ID")]')
     AVATAR = (By.CSS_SELECTOR, 'div.profile-avatar img')
@@ -161,7 +161,7 @@ class InventorySelectors(SelEnum):
     """Profile inventory selectors. """
     BOX = (By.CLASS_NAME, 'inventory-item-wrapper')
     ITEM_BOX = (By.CSS_SELECTOR, 'div.inventory-item.win div.inventory-item_left')
-    
+
     IMAGE = (By.CLASS_NAME, 'inventory-item_left__cover')
     NAME = (By.CLASS_NAME, 'profile-item-left-name')
     PRICE = (By.CSS_SELECTOR, 'span.icur-container.ml-1')
@@ -172,7 +172,7 @@ class InventorySelectors(SelEnum):
 
 class Condition:
     """
-    Conditions for finding the element. 
+    Conditions for finding the element.
     """
     PRESENCE = EC.presence_of_element_located
     CLICKABLE = EC.element_to_be_clickable
