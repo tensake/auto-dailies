@@ -1,4 +1,5 @@
 import pickle
+import time
 import os
 
 from selenium import webdriver
@@ -6,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 
 from src.config import CONFIG
 from src.common import is_docker
+from src.logger import prdebug
 
 def create_driver():
     options = webdriver.ChromeOptions()
@@ -47,23 +49,46 @@ def create_driver():
 
 def load_cookies(driver, cookie_file) -> tuple[bool, str]:
     """
-    Load cookies and injects them to the driver,
-    also capitalizes "sameSite" cookie attribute
-    as some browsers may raise an error.
+    Read, filter and inject cookies in to the driver.
 
     Returns:
         tuple[bool, str]: (success, error)
     """
-    if os.path.exists(cookie_file):
-        try:
-            cookies = pickle.load(open(cookie_file, "rb"))
-            for cookie in cookies:
-                if 'sameSite' in cookie:
-                    cookie['sameSite'] = cookie['sameSite'].capitalize()
-                driver.add_cookie(cookie)
-            return True, ""
-        except Exception as e:
-            return False, f"Failed to load cookies: {e}"
-    return False, "Cookie file not found."
+
+    # Read cookies from file
+    if not os.path.exists(cookie_file):
+        return False, "Cookie file not found."
+    try:
+        with open(cookie_file, "rb") as f:
+            cookies = pickle.load(f)
+    except Exception as e:
+        return False, f"Failed to read cookie file: {e}"
+
+    # Get all valid cookies by filtering expired cookies and sorting by priority
+    now = time.time()
+    valid_cookies = [c for c in cookies if c.get("expiry", now + 1) > now]
+    valid_cookies.sort(key=lambda c: not c["name"].startswith(("XSRF-TOKEN", "app_uid", "remember_web_")))
+
+    # Filter cookies to stay under limit
+    kept = []
+    total_size = 0
+    for cookie in valid_cookies:
+        size = len(cookie["name"]) + 1 + len(cookie["value"]) + 2
+        if total_size + size > 7800: # this is to stay under nginx's 8192 bytes limit
+            continue
+        if "sameSite" in cookie:
+            cookie["sameSite"] = cookie["sameSite"].capitalize()
+        kept.append(cookie)
+        total_size += size
+
+    prdebug(f"Got {len(kept)}/{len(cookies)} cookies, {len(cookies) - len(valid_cookies)} expired skipped, total {total_size} bytes.")
+
+    # Add cookies
+    try:
+        for cookie in kept:
+            driver.add_cookie(cookie)
+        return True, ""
+    except Exception as e:
+        return False, f"Failed to load cookies: {e}"
 
 def save_cookies(driver, cookie_file): pickle.dump(driver.get_cookies(), open(cookie_file, "wb"))
